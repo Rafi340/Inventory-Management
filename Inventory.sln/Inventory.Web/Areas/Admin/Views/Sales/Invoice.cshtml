@@ -1,0 +1,157 @@
+﻿@using Inventory.Domain.ViewModel
+@model SaleViewModel
+@{
+    ViewData["Title"] = "Invoice";
+}
+
+<div class="row invoice-preview">
+ 
+    <div class="col-xl-12 col-md-12 col-12 mb-md-0 mb-4">
+        <div class="card invoice-preview-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column m-sm-3 m-0">
+                    <div class="mb-xl-0 mb-4">
+                        <div class="d-flex svg-illustration mb-4 gap-2 align-items-center">
+                            <svg width="32"
+                                 height="32"
+                                 viewBox="0 0 32 22"
+                                 fill="none">
+                                <rect x="2" y="8" width="28" height="12" fill="#2563eb" rx="1" />
+
+                                <path d="M1 8 L16 2 L31 8 Z" fill="#1d4ed8" />
+
+                                <rect x="5" y="12" width="4" height="3" fill="#60a5fa" stroke="#1e40af" strokeWidth="0.5" />
+                                <rect x="5" y="15" width="4" height="3" fill="#93c5fd" stroke="#1e40af" strokeWidth="0.5" />
+
+                                <rect x="12" y="10" width="4" height="3" fill="#60a5fa" stroke="#1e40af" strokeWidth="0.5" />
+                                <rect x="12" y="13" width="4" height="3" fill="#93c5fd" stroke="#1e40af" strokeWidth="0.5" />
+                                <rect x="12" y="16" width="4" height="2" fill="#dbeafe" stroke="#1e40af" strokeWidth="0.5" />
+
+                                <rect x="20" y="11" width="4" height="3" fill="#60a5fa" stroke="#1e40af" strokeWidth="0.5" />
+                                <rect x="20" y="14" width="4" height="4" fill="#93c5fd" stroke="#1e40af" strokeWidth="0.5" />
+
+                                <rect x="26" y="14" width="3" height="4" fill="#dbeafe" stroke="#1e40af" strokeWidth="0.5" />
+
+                                <rect x="14" y="16" width="4" height="4" fill="#1e40af" />
+
+                                <circle cx="17.5" cy="18" r="0.3" fill="#60a5fa" />
+                            </svg>
+
+                            <span class="app-brand-text fw-bold fs-4"> Inventory </span>
+                        </div>
+                        
+                    </div>
+                    <div>
+                        <h4 class="fw-semibold mb-2">INVOICE #@Model.InvoiceNo</h4>
+                        <div class="mb-2 pt-1">
+                            <span>Date Issues:</span>
+                            <span class="fw-semibold">@Model.SaleDate.ToShortDateString()</span>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <hr class="my-0" />
+            <div class="card-body">
+                <div class="row p-sm-3 p-0">
+                    <div class="col-xl-6 col-md-12 col-sm-5 col-12 mb-xl-0 mb-md-4 mb-sm-0 mb-4">
+                        <h6 class="mb-3">Invoice To:</h6>
+                        <p class="mb-1">@Model.CustomerName</p>
+                        <p class="mb-1">@Model.CompanyName</p>
+                        <p class="mb-1">@Model.Address</p>
+                        <p class="mb-1">@Model.Mobile</p>
+                        <p class="mb-0">@Model.Email</p>
+                    </div>
+                    <div class="col-xl-6 col-md-12 col-sm-7 col-12">
+                        <h6 class="mb-4">Bill To:</h6>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="pe-4">Total Due:</td>
+                                    <td><strong>৳@Model.DueAmount</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="pe-4">AccountType:</td>
+                                    <td>@Model.AccountType</td>
+                                </tr>
+                                <tr>
+                                    <td class="pe-4">Country:</td>
+                                    <td>Bangladesh</td>
+                                </tr>
+                                <tr>
+                                    <td class="pe-4">AccountNo:</td>
+                                    <td>@Model.AccountNumber</td>
+                                </tr>
+                                <tr>
+                                    <td class="pe-4">Account Holder Name:</td>
+                                    <td>@Model.AccountHolderName</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive border-top">
+                <table class="table m-0">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Unit Price</th>
+                            <th>Quantity</th>
+                            <th>Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.SalesItems)
+                        {
+                            <tr>
+                                <td class="text-nowrap">@item.ProductCode</td>
+                                <td class="text-nowrap">@item.Name</td>
+                                <td>@item.UnitPrice</td>
+                                <td>@item.Quantity</td>
+                                <td>@(item.Quantity * item.UnitPrice)</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="3" class="align-top px-4 py-4">
+                                <p class="mb-2 mt-3">
+                                    <span class="ms-3 fw-semibold">Salesperson:</span>
+                                    <span>@Model.AccountHolderName</span>
+                                </p>
+                                <span class="ms-3">Thanks for your business</span>
+                            </td>
+                            <td class="text-end pe-3 py-4">
+                                <p class="mb-2 pt-3">Subtotal:</p>
+                                <p class="mb-2">Discount:</p>
+                                <p class="mb-2">Tax (VAT):</p>
+                                <p class="mb-0 pb-3">Total:</p>
+                            </td>
+                            <td class="ps-2 py-4">
+                                <p class="fw-semibold mb-2 pt-3">@Model.NetAmount</p>
+                                <p class="fw-semibold mb-2">@Model.Discount</p>
+                                <p class="fw-semibold mb-2">@Model.Vat</p>
+                                <p class="fw-semibold mb-0 pb-3">@Model.TotalAmount</p>
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card-body mx-3">
+                <div class="row">
+                    <div class="col-12">
+                        <span class="fw-semibold">Note:</span>
+                        <span>
+                            @Model.Note
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ 
+</div>
+

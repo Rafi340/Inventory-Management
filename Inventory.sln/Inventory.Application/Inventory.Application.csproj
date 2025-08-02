@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="AWSSDK.SQS" Version="4.0.0.12" />
+    <PackageReference Include="MediatR" Version="12.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Inventory.Domain\Inventory.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\AccountTypes\Commands\" />
+    <Folder Include="Features\Accounts\Commands\" />
+    <Folder Include="Features\Dashboard\Commands\" />
+    <Folder Include="Features\Invoice\Commands\" />
+    <Folder Include="Features\SalesItems\Commands\" />
+    <Folder Include="Features\SalesTypes\Commands\" />
+    <Folder Include="Features\Users\Commands\" />
+  </ItemGroup>
+
+</Project>

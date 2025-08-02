@@ -1,0 +1,105 @@
+﻿
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+  <link rel="stylesheet" href="@Url.Content("~/assets/vendor/css/pages/page-auth.css")" />
+
+<div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
+        <div class="authentication-inner py-4">
+            <!-- Register Card -->
+            <div class="card">
+                <div class="card-body">
+                   
+                    <h4 class="mb-1 pt-2">Inventory PRO 🚀</h4>
+                    <p class="mb-4">Make your business easy and fun!</p>
+
+                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" asp-antiforgery="true">
+                        <h2>Create a new account</h2>
+                        <hr />
+                        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                        <div class="mb-3">
+                            <label asp-for="FirstName" class="form-label">First Name</label>
+                            <input type="text"
+                                   class="form-control"
+                                   asp-for="FirstName"
+                                   name="FirstName"
+                                   placeholder="Enter your First Name"
+                                    />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LastName" class="form-label">Last Name</label>
+                            <input type="text"
+                                   class="form-control"
+                                   asp-for="LastName"
+                                   name="LastName"
+                                   placeholder="Enter your Last Name" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <input type="email"
+                                   class="form-control"
+                                   asp-for="Email"
+                                   name="Email"
+                                   placeholder="Enter your Email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3 form-password-toggle">
+                            <label class="form-label" asp-for="Password">Password</label>
+                            <div class="input-group input-group-merge">
+                                <input type="password"
+                                       asp-for="Password"
+                                       class="form-control"
+                                       name="Password"
+                                       placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                       aria-describedby="password" />
+                                <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3 form-password-toggle">
+                            <label class="form-label" asp-for="ConfirmPassword">Confirm Password</label>
+                            <div class="input-group input-group-merge">
+                                <input type="password"
+                                       asp-for="ConfirmPassword"
+                                       class="form-control"
+                                       name="ConfirmPassword"
+                                       placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                       aria-describedby="ConfirmPassword" />
+                                <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
+                            </div>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+
+                       
+                        <button class="btn btn-primary d-grid w-100" type="submit">Register</button>
+                    </form>
+
+                    <p class="text-center">
+                        <span>Already have an account?</span>
+                        <a href="/Account/Login">
+                            <span>Sign in instead</span>
+                        </a>
+                    </p>
+
+                   
+
+                </div>
+            </div>
+            <!-- Register Card -->
+        </div>
+    </div>
+</div>
+
+
+    <script src="@Url.Content("~/assets/js/pages-auth.js")"></script>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

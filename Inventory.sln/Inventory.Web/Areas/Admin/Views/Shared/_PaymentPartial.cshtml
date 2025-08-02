@@ -1,0 +1,78 @@
+﻿@model PaymentAddModel
+<div class="col">
+
+    <div class="offcanvas offcanvas-end event-sidebar"
+         tabindex="-1"
+         id="addPaymentSidebar"
+         aria-labelledby="addEventSidebarLabel">
+        <div class="offcanvas-header my-1">
+            <h5 class="offcanvas-title" id="addEventSidebarLabel">Add Payment</h5>
+            <button type="button"
+                    class="btn-close text-reset"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body pt-0">
+            <form asp-antiforgery="true" asp-area="Admin" enctype="multipart/form-data" asp-controller="Sales"
+                  asp-action="AddPayment" method="post">
+                  <input type="hidden" asp-for="Id" name="Id" />
+                <div class="mb-3">
+                    <label class="form-label" asp-for="DueAmount">Due Amount</label>
+                    <input type="number"
+                           class="form-control"
+                           id="DueAmount"
+                           name="DueAmount"
+                           asp-for="DueAmount"
+                           placeholder="DueAmount" readonly />
+                    <span asp-validation-for="DueAmount" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" asp-for="PaidAmount">Paid Amount</label>
+                    <input type="number"
+                           class="form-control"
+                           id="PaidAmount"
+                           name="PaidAmount"
+                           asp-for="PaidAmount"
+                           placeholder="PaidAmount" min="0"  />
+                    <span asp-validation-for="PaidAmount" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="AcountTypeId" class="form-label">Account Type</label>
+                    <select asp-for="AcountTypeId" asp-items="Model.AcountTypeList"
+                            class="form-control select2 form-select">
+                        <option value="">Account Type</option>
+                    </select>
+                    <span asp-validation-for="AcountTypeId" class="text-danger"></span>
+
+                </div>
+                <div class="mb-3">
+                    <label asp-for="AccountId" class="form-label">Account No</label>
+                    <select asp-for="AccountId" asp-items="Model.AccountList"
+                            class="form-control select2 form-select">
+                        <option value="">Select Account</option>
+                    </select>
+                    <span asp-validation-for="AccountId" class="text-danger"></span>
+
+                </div>
+               
+                <div class="mb-3 d-flex justify-content-sm-between justify-content-start my-4">
+                    <div>
+                        <button type="submit" class="btn btn-primary btn-add-event me-sm-3 me-1">Add</button>
+                        <button type="reset"
+                                class="btn btn-label-secondary btn-cancel me-sm-0 me-1"
+                                data-bs-dismiss="offcanvas">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+   
+   
+}

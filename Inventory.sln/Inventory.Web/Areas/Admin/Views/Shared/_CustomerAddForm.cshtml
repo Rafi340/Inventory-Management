@@ -1,0 +1,118 @@
+﻿@model CustomerAddModel
+<div class="col">
+    
+    <div class="offcanvas offcanvas-end event-sidebar"
+         tabindex="-1"
+         id="addEventSidebar"
+         aria-labelledby="addEventSidebarLabel">
+        <div class="offcanvas-header my-1">
+            <h5 class="offcanvas-title" id="addEventSidebarLabel">Add Customer</h5>
+            <button type="button"
+                    class="btn-close text-reset"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body pt-0">
+            <form asp-antiforgery="true" asp-area="Admin" enctype="multipart/form-data" asp-controller="Customers"
+                  asp-action="Add" method="post">
+                @* <div asp-validation-summary="All" class="text-danger"></div> *@
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Name">Name</label>
+                    <input type="text"
+                           class="form-control"
+                           id="Name"
+                           name="Name"
+                           asp-for="Name"
+                           placeholder="Name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" asp-for="CompanyName">Company Name</label>
+                    <input type="text"
+                           class="form-control"
+                           id="CompanyName"
+                           name="CompanyName"
+                           asp-for="CompanyName"
+                           placeholder="CompanyName" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Email">Email</label>
+                    <input type="email"
+                           class="form-control"
+                           id="Email"
+                           name="Email"
+                           asp-for="Email"
+                           placeholder="Email" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Mobile">Mobile</label>
+                    <input type="number"
+                           class="form-control"
+                           id="Mobile"
+                           name="Mobile"
+                           asp-for="Mobile"
+                           placeholder="Mobile" />
+                    <span asp-validation-for="Mobile" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" asp-for="OpeningBalance">Opening Balance</label>
+                    <input type="number"
+                           class="form-control"
+                           id="OpeningBalance"
+                           name="OpeningBalance"
+                           asp-for="OpeningBalance"
+                           min="0"
+                           placeholder="Opening Balance" />
+                    <span asp-validation-for="OpeningBalance" class="text-danger"></span>
+                </div>
+             
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Address">Address</label>
+                    <textarea type="text"
+                           class="form-control"
+                           id="Address"
+                           name="Address"
+                           asp-for="Address"
+                           placeholder="Enter Address"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Status" class="form-label">Status</label>
+                    <select class="form-select" asp-for="Status" aria-label="Default select example">
+                        <option value="1" selected>Active</option>
+                        <option value="0">UnActive</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" asp-for="ImageFile">Image</label>
+                    <input type="file"
+                           accept="image/*"
+                           class="form-control"
+                           id="ImageFile"
+                           name="ImageFile"
+                           asp-for="ImageFile"
+                           placeholder="ImageFile"
+                           onchange="previewImage(event)" />
+                    <img style="display: none;" id="preview" class="img-fluid rounded mb-3 pt-1 mt-4"
+                         height="100"
+                         width="100"
+                         alt="User avatar" />
+                </div>
+               
+              
+              
+                
+                <div class="mb-3 d-flex justify-content-sm-between justify-content-start my-4">
+                    <div>
+                        <button type="submit" class="btn btn-primary btn-add-event me-sm-3 me-1">Add</button>
+                        <button type="reset"
+                                class="btn btn-label-secondary btn-cancel me-sm-0 me-1"
+                                data-bs-dismiss="offcanvas">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

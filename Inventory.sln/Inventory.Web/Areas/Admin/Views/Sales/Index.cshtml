@@ -1,0 +1,234 @@
+﻿@model SaleSearchModel
+@{
+    ViewData["Title"] = "Sale";
+}
+@section Styles
+{
+    <link rel="stylesheet" href="~/assets/vendor/libs/typeahead-js/typeahead.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/flatpickr/flatpickr.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css" />
+
+    <!-- Row Group CSS -->
+    <link rel="stylesheet" href="~/assets/vendor/libs/datatables-rowgroup-bs5/rowgroup.bootstrap5.css" />
+    <!-- Form Validation -->
+    <link rel="stylesheet" href="~/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
+}
+<div class="card">
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label>Invoice No</label>
+                    <input type="text" asp-for="SearchItem.InvoiceNo" name="SearchItem.InvoiceNo" class="form-control" />
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="UnitId" class="form-label">Customer</label>
+                    <select asp-for="SearchItem.CustomerId" name="SearchItem.CustomerId" asp-items="Model?.CustomerList" class="form-select">
+                        <option value="">Choose...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label>From Date</label>
+                    <input type="date" asp-for="SearchItem.FromDate" name="SearchItem.FromDate" class="form-control" />
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label>To Date</label>
+                    <input type="date" asp-for="SearchItem.ToDate" name="SearchItem.ToDate" class="form-control" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="card mt-2">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="card-title mb-2">Sale products</h5>
+            </div>
+            <div class="col-md-6 text-end">
+                <button class="btn btn-primary" onclick="window.location.href='/Admin/Sales/Add'">Add Sale</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-datatable table-responsive pt-0">
+        <partial name="_ResponsePartial" />
+        <partial name="_ModalPartial" />
+        <table id="Sales" class="datatables-basic table table-sm small">
+            <thead>
+                <tr>
+                    <th>In. No</th>
+                    <th>Sale Date</th>
+                    <th>Customer Name</th>
+                    <th>Sales Type</th>
+                    <th>Vat</th>
+                    <th>Net Ammount</th>
+                    <th>Discount</th>
+                    <th>Total Ammount</th>
+                    <th>Paid Amount</th>
+                    <th>Due Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    
+</div>
+
+<div id="addPaymentDiv"></div>
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
+    <script src="~/assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js"></script>
+    <script src="~/assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js"></script>
+    <script src="~/assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js"></script>
+
+    <script>
+        $(function () {
+            let debounceTimer;
+            $("#Sales").DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: false,
+                lengthChange: true,
+                searching: false,
+                autoWidth: false,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'All']
+                ],
+                layout: {
+                    topStart: 'buttons',  // Buttons on the Left
+                    topEnd: 'search',     // Search Bar on the Right
+                },
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
+                ajax: {
+                    url: "/Admin/Sales/GetSaleSp",
+                    type: "POST",
+                    contentType: "application/json", //must be added
+                    dataType: "json", //better to add, not mandatory
+                            data: function (d) {
+                                d.InvoiceNo = $("#SearchItem_InvoiceNo").val();
+                                d.CustomerId = $("#SearchItem_CustomerId").val() || null;
+                                d.FromDate = $("#SearchItem_FromDate").val() == "" ? null : new Date($("#SearchItem_FromDate").val());
+                                d.ToDate = $("#SearchItem_ToDate").val() == "" ? null : new Date($("#SearchItem_ToDate").val());
+                                return JSON.stringify(d);
+                        }
+                },
+                columnDefs: [
+                    {
+                        orderable: false,
+                        targets: 11,
+                        responsivePriority: 1,
+                        render: function (data, type, row) {
+                            let status = row[12];
+                            let paymentButton = "";
+
+                            if (status != "1") {
+                                paymentButton = `<a class="dropdown-item addPayment" data-id='${data}' value='${data}'><i class="fas fa-plus me-2"></i>Payment</a>`;
+                            }
+                            return ` <div class="dropdown">
+                                          <button
+                                           class="btn p-0"
+                                           type="button"
+                                          id="actionButtonId"
+                                         data-bs-toggle="dropdown"
+                                       aria-haspopup="true"
+                                         aria-expanded="false">
+                                         <i class="ti ti-dots-vertical ti-sm text-muted"></i>
+                                        </button>
+                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="actionButtonId">
+                                           <a class="dropdown-item" onclick="window.location.href='/Admin/Sales/Update/${data}'" value='${data}'> <i class="fa-solid fa-pencil me-2"></i> Edit </a>
+                                          <a class="dropdown-item show-bs-modal"  data-id='${data}' value='${data}'><i class="fas fa-trash me-2"></i>Delete</a>
+                                          ${paymentButton}
+                                    </div>
+                                     </div>`;
+                        }
+                    }
+                ]
+            });
+
+            $('#Sales').on('click', '.show-bs-modal', function () {
+                let id = $(this).data("id");
+                let deleteModal = $("#modal-delete");
+                deleteModal.find('.modal-body p').text('Are you sure you want to delete this Sales?');
+                $('#delete-id').val(id);
+                $('#delete-form').attr('action', '/admin/Sales/delete');
+                deleteModal.modal('show');
+            });
+
+            $(document).on('click', '.addPayment', function (e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+             fetchData('/admin/Sales/AddPaymentPartial', 'GET', { id: id }, function (html, status) {
+                $('#addPaymentDiv').html(html);
+
+                    $.validator.unobtrusive.parse($('#addPaymentDiv'));
+                    var offcanvasElement = document.getElementById('addPaymentSidebar');
+                    var bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
+                    bsOffcanvas.show();
+                      $('#PaidAmount').on('input', function () {
+                        let PaidAmount = parseFloat($(this).val()) || 0;
+                        let dueamount = parseFloat($('#DueAmount').val()) || 0;
+                        if(dueammount < PaidAmount)
+                        {
+                            $(this).val(0);
+                        }
+                    });
+                    $('#AcountTypeId').change(function () {
+                        var typeId = $(this).val();
+                         $('#AccountId').empty().append('<option>Loading...</option>');
+
+                        if (typeId) {
+                                fetchData('/Admin/Sales/GetAccountsByType','GET', { accountTypeId: typeId }, function (data, status) {
+                                if(status)
+                                $('#AccountId').empty();
+                                $.each(data, function (i, account) {
+                                            $('#AccountId').append(`<option value="${account.value}">${account.text}</option>`);
+                                });
+                            });
+                        }
+                    });
+              });
+
+            });
+
+            $('#delete-button').click(function()
+            {
+                $('#delete-form').submit();
+            });
+
+             $(".form-control, .form-select").on("input change", function () {
+                clearTimeout(debounceTimer);
+
+            debounceTimer = setTimeout(() => {
+                $('#Sales').DataTable().ajax.reload(null, false);
+            }, 500);
+            });
+        
+            $("#searchButton").click(function () {
+                $('#Sales').DataTable().ajax.reload(null, false);
+            });
+
+        });
+    </script>
+}

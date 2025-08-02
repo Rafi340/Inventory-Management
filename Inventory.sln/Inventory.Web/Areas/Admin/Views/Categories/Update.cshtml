@@ -1,0 +1,79 @@
+﻿@model UpdateCategoryModel
+@{
+    ViewData["Title"] = "Update Category";
+}
+
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Update Category</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Update Category</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row g-4">
+            <div class="col-12">
+                <partial name="_ResponsePartial" />
+            </div>
+            <div class="col-md-12">
+                <div class="card card-primary card-outline mb-4">
+                    <div class="card-header"><div class="card-title">Update Category</div></div>
+                    <form asp-antiforgery="true" asp-area="Admin" asp-controller="Categories"
+                          asp-action="Update" method="post">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label asp-for="Name" class="form-label">Category Name</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               asp-for="Name"
+                                               aria-describedby="nameHelp" />
+                                        <span asp-validation-for="Name" class="text-danger"></span>
+                                        <div id="nameHelp" class="form-text">
+                                            Provide a Category Name
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                               
+                            </div>
+
+
+
+
+
+
+                        </div>
+                        <!--end::Body-->
+                        <!--begin::Footer-->
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                        <!--end::Footer-->
+                    </form>
+                    <!--end::Form-->
+                </div>
+                <!--end::Quick Example-->
+            </div>
+            <!--end::Col-->
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content-->
+@section Scripts
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}
+

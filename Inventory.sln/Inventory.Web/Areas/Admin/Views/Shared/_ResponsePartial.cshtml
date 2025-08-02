@@ -1,0 +1,28 @@
+﻿@using Inventory.Infrastructure
+
+@if (TempData["ShowToast"] != null && (bool)TempData["ShowToast"] && TempData.Peek<ResponseModel>("ResponseMessage") != null)
+{
+    var response = TempData.Get<ResponseModel>("ResponseMessage");
+    string bgClass = response.Type.ToString().ToLower() switch
+    {
+        "success" => "bg-success text-white",
+        "error" => "bg-danger text-white",
+        "warning" => "bg-warning text-dark",
+        "info" => "bg-info text-white",
+        _ => "bg-secondary text-white"
+    };
+    <div class="bs-toast toast toast-ex animate__jello my-2"
+         role="alert"
+         aria-live="assertive"
+         aria-atomic="true"
+         data-bs-delay="2000">
+        <div class="toast-header @bgClass">
+            <i class="ti ti-bell ti-xs me-2"></i>
+            <div class="me-auto fw-semibold">@(response.Type.ToString())</div>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body textboldsf text-@(response.Type.ToString().ToLower())">@response.Message</div>
+    </div>
+
+  
+}

@@ -1,0 +1,154 @@
+﻿@{
+    ViewData["Title"] = "Products";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/assets/vendor/libs/typeahead-js/typeahead.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/flatpickr/flatpickr.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css" />
+
+    <!-- Row Group CSS -->
+    <link rel="stylesheet" href="~/assets/vendor/libs/datatables-rowgroup-bs5/rowgroup.bootstrap5.css" />
+    <!-- Form Validation -->
+    <link rel="stylesheet" href="~/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
+}
+
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="card-title mb-2">Available products</h5>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <button class="btn btn-primary" onclick="window.location.href='/Admin/Products/Add'">Add Product</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-datatable table-responsive pt-0">
+                <partial name="_ResponsePartial" />
+                <partial name="_ModalPartial" />
+                <table id="products" class="datatables-basic table">
+                    <thead>
+                        <tr>
+                    <th><input type="checkbox" id="select-all" class="form-check-input" /></th>
+                            <th>Image</th>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Unit Name</th>
+                            <th>Purchase Price</th>
+                            <th>MRP</th>
+                            <th>Wholesale</th>
+                            <th>Stock</th>
+                            <th>Low Stock</th>
+                            <th>Damage Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+   
+
+
+
+              
+
+@section Scripts
+{
+    @* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> *@
+    @* <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script> *@
+    <script src="~/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
+@*     <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script> *@
+    <script>
+        $(function () {
+            $("#products").DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: false,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'All']
+                ],
+                ajax: {
+                    url: "/Admin/Products/GetProducts",
+                    type: "POST",
+                    contentType: "application/json", //must be added
+                    dataType: "json", //better to add, not mandatory
+                    data: function (d) {
+                        d.SearchItem = {};
+                        return JSON.stringify(d);
+                    },
+                },
+                columnDefs: [
+                        {
+                         targets: 0, // checkbox column
+                         orderable: false
+                     },
+                    {
+                        orderable: false,
+                        targets: 11,
+                        render: function (data, type, row) {
+                            console.log(type);
+                            return `
+
+                                            <div class="dropdown">
+                                          <button
+                                           class="btn p-0"
+                                           type="button"
+                                          id="actionButtonId"
+                                         data-bs-toggle="dropdown"
+                                       aria-haspopup="true"
+                                         aria-expanded="false">
+                                         <i class="ti ti-dots-vertical ti-sm text-muted"></i>
+                                        </button>
+                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="actionButtonId">
+                                           <a class="dropdown-item" onclick="window.location.href='/Admin/Products/Update/${data}'" value='${data}'> <i class="fa-solid fa-pencil me-2"></i> Edit </a>
+                                          <a class="dropdown-item show-bs-modal"  data-id='${data}' value='${data}'><i class="fas fa-trash me-2"></i>Delete</a>
+                                    </div>
+                                     </div>
+                                            
+                                            `;
+                        }
+                    }
+                ]
+            });
+
+            $('#products').on('click', '.show-bs-modal', function (e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                let deletemodal = $('#modal-delete');
+                deletemodal.find('.modal-body p').text('Are you sure you want to delete this Product?');
+                $('#delete-id').val(id);
+                $('#delete-form').attr('action', '/admin/products/delete');
+                deletemodal.modal('show');
+            });
+            $('#delete-button').click(function(){
+                $('#delete-form').submit();
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+          const selectAll = document.getElementById("select-all");
+
+          if (selectAll) {
+            selectAll.addEventListener("change", function () {
+              const checkboxes = document.querySelectorAll("input.form-check-input[type='checkbox']:not(#select-all)");
+              checkboxes.forEach(cb => cb.checked = selectAll.checked);
+            });
+          }
+        });
+    </script>
+}

@@ -1,0 +1,72 @@
+﻿
+body {
+	background: #f8f9fa;
+}
+
+.hero-section {
+	background: linear-gradient(135deg, #007bff, #6610f2);
+	color: white;
+	padding: 100px 20px;
+	border-radius: 0 0 40px 40px;
+	text-align: center;
+	position: relative;
+	overflow: hidden;
+}
+
+	.hero-section h1 {
+		font-size: 3rem;
+		font-weight: bold;
+	}
+
+	.hero-section p {
+		font-size: 1.25rem;
+	}
+
+.btn-animated {
+	transition: transform 0.3s ease;
+}
+
+	.btn-animated:hover {
+		transform: scale(1.05);
+	}
+
+.feature-box {
+	background: white;
+	border-radius: 20px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+	padding: 30px;
+	transition: transform 0.3s ease;
+}
+
+	.feature-box:hover {
+		transform: translateY(-5px);
+	}
+
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.fade-in {
+	animation: fadeInUp 1s ease forwards;
+}
+
+.delay-1 {
+	animation-delay: 0.3s;
+}
+
+.delay-2 {
+	animation-delay: 0.6s;
+}
+
+.delay-3 {
+	animation-delay: 0.9s;
+}
+

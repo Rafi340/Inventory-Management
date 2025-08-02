@@ -1,0 +1,91 @@
+﻿@model BalanceTransferAddModel
+<div class="col">
+
+    <div class="offcanvas offcanvas-end event-sidebar"
+         tabindex="-1"
+         id="addEventSidebar"
+         aria-labelledby="addEventSidebarLabel">
+        <div class="offcanvas-header my-1">
+            <h5 class="offcanvas-title" id="addEventSidebarLabel">Add Customer</h5>
+            <button type="button"
+                    class="btn-close text-reset"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body pt-0">
+            <form asp-antiforgery="true" asp-area="Admin" enctype="multipart/form-data" asp-controller="BalanceTransfers"
+                  asp-action="Add" method="post">
+                @* <div asp-validation-summary="All" class="text-danger"></div> *@
+                <div class="mb-3">
+                    <label asp-for="SenderAccountTypeId" class="form-label">Sender Account Type</label>
+                    <select asp-for="SenderAccountTypeId" asp-items="Model.SenderAccountTypeList"
+                                class="form-control select2 form-select">
+                            <option value="">Select Type</option>
+                        </select>
+                    <span asp-validation-for="SenderAccountTypeId" class="text-danger"></span>
+
+                </div>
+                <div class="mb-3">
+                    <label asp-for="SenderAccountId" class="form-label">Sender Account No</label>
+                    <select asp-for="SenderAccountId" class="form-control select2 form-select">
+                        <option value="">Select Account</option>
+                    </select>
+                    <span asp-validation-for="SenderAccountId" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" asp-for="TransferAmount">Transfer Amount</label>
+                    <input type="number"
+                           class="form-control"
+                           id="TransferAmount"
+                           name="TransferAmount"
+                           asp-for="TransferAmount"
+                           placeholder="TransferAmount" />
+
+                    <span asp-validation-for="TransferAmount" class="text-danger"></span>
+
+                </div>
+                <div class="mb-3">
+                    <label asp-for="ReceiverAccountTypeId" class="form-label">Receiver Account Type</label>
+                    <select asp-for="ReceiverAccountTypeId" asp-items="Model.ReceiverAccountTypeList"
+                            class="form-control select2 form-select">
+                        <option value="">Select Type</option>
+                    </select>
+                    <span asp-validation-for="ReceiverAccountTypeId" class="text-danger"></span>
+
+                </div>
+                <div class="mb-3">
+                    <label asp-for="ReceiverAccountId" class="form-label">Receiver Account No</label>
+                    <select asp-for="ReceiverAccountId" class="form-control select2 form-select">
+                        <option value="">Select Account</option>
+                    </select>
+                    <span asp-validation-for="ReceiverAccountId" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Note" class="form-label">Note</label>
+                    <input class="form-control" type="text" asp-for="Note" name="Note" />
+                </div>
+             
+             
+
+             
+              
+               
+
+
+
+
+                <div class="mb-3 d-flex justify-content-sm-between justify-content-start my-4">
+                    <div>
+                        <button type="submit" class="btn btn-primary btn-add-event me-sm-3 me-1">Add</button>
+                        <button type="reset"
+                                class="btn btn-label-secondary btn-cancel me-sm-0 me-1"
+                                data-bs-dismiss="offcanvas">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

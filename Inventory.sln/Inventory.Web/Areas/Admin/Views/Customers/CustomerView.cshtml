@@ -1,0 +1,169 @@
+﻿@using Inventory.Domain.ViewModel
+
+@model CustomerView
+@{
+    ViewData["Title"] = "Customer";
+}
+              
+              <div class="row">
+                <!-- User Sidebar -->
+                <div class="col-xl-4 col-lg-5 col-md-5 order-1 order-md-0">
+                  <!-- User Card -->
+                  <div class="card mb-4">
+                    <div class="card-body">
+                      <div class="user-avatar-section">
+                        <div class="d-flex align-items-center flex-column">
+                       
+                        @if (!string.IsNullOrEmpty(Model?.ImageUrl))
+                        {
+                            <img class="img-fluid rounded mb-3 pt-1 mt-4"
+                                 src="@Model.ImageUrl"
+                                 height="100"
+                                 width="100"
+                                 alt="User avatar" />
+                        }else {
+                            <img class="img-fluid rounded mb-3 pt-1 mt-4"
+                                 src="~/assets/img/avatars/15.png"
+                                 height="100"
+                                 width="100"
+                                 alt="User avatar" />
+                        }
+                         
+                          <div class="user-info text-center">
+                            <h4 class="mb-2">@Model.Name</h4>
+                            <span class="badge bg-label-secondary mt-1">Customer</span>
+                          </div>
+                        </div>
+                      </div>
+                 @*      <div class="d-flex justify-content-around flex-wrap mt-3 pt-3 pb-4 border-bottom">
+                        <div class="d-flex align-items-start me-4 mt-3 gap-2">
+                          <span class="badge bg-label-primary p-2 rounded"><i class="ti ti-checkbox ti-sm"></i></span>
+                          <div>
+                            <p class="mb-0 fw-semibold">1.23k</p>
+                            <small>Invoice</small>
+                          </div>
+                        </div>
+                        <div class="d-flex align-items-start mt-3 gap-2">
+                          <span class="badge bg-label-primary p-2 rounded"><i class="ti ti-briefcase ti-sm"></i></span>
+                          <div>
+                            <p class="mb-0 fw-semibold">568</p>
+                            <small>Transaction</small>
+                          </div>
+                        </div>
+                      </div> *@
+                      <p class="mt-4 small text-uppercase text-muted">Details</p>
+                      <div class="info-container">
+                        <ul class="list-unstyled">
+                          <li class="mb-2 pt-1">
+                              <span class="fw-semibold me-1">CustomerId:</span>
+                              <span>@Model.CustomerId</span>
+                          </li>
+                          <li class="mb-2">
+                            <span class="fw-semibold me-1">Company Name:</span>
+                            <span>@Model.CompanyName</span>
+                          </li>
+                          <li class="mb-2 pt-1">
+                            <span class="fw-semibold me-1">Email:</span>
+                            <span>@Model.Email</span>
+                          </li>
+                          <li class="mb-2 pt-1">
+                            <span class="fw-semibold me-1">Status:</span>
+                            <span class="badge bg-label-success">Active</span>
+                          </li>
+                          <li class="mb-2 pt-1">
+                            <span class="fw-semibold me-1">Opening Balance:</span>
+                            <span>@Model.OpeningBalance</span>
+                          </li>
+                          <li class="mb-2 pt-1">
+                            <span class="fw-semibold me-1">Mobile:</span>
+                            <span>@Model.Mobile</span>
+                          </li>
+                       
+                          <li class="pt-1">
+                            <span class="fw-semibold me-1">Address:</span>
+                            <span>@Model.Address</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /User Card -->
+                 
+
+                </div>
+                <!--/ User Sidebar -->
+
+                <!-- User Content -->
+                <div class="col-xl-8 col-lg-7 col-md-7 order-0 order-md-1">
+
+        <div class="card mb-4">
+            <div class="table-responsive mb-3">
+                <table class="table datatable-invoice border-top">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Invoice</th>
+                            <th>Total</th>
+                            <th>Paid</th>
+                            <th>Due</th>
+                            <th>VAT</th>
+                            <th>Discount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.SaleViews?.Any() == true)
+                        {
+                            int index = 1;
+                            foreach (var sale in Model.SaleViews)
+                            {
+                                string statusText = sale.Status switch
+                                {
+                                    1 => "Paid",
+                                    2 => "Partial",
+                                    _ => "Due"
+                                };
+
+                                string badgeClass = sale.Status switch
+                                {
+                                    1 => "bg-success",
+                                    2 => "bg-warning",
+                                    _ => "bg-danger"
+                                };
+
+                                <tr>
+                                    <td>@index</td>
+                                    <td>
+                                        <a href="@Url.Action("Invoice", "Sales", new { id = sale.Id })" class="text-primary text-decoration-underline">
+                                            @sale.InvoiceNo
+                                        </a>
+                                    </td>
+                                    <td>@sale.TotalAmount.ToString("C")</td>
+                                    <td>@sale.PaidAmount.ToString("C")</td>
+                                    <td>@sale.DueAmount.ToString("C")</td>
+                                    <td>@sale.Vat.ToString("C")</td>
+                                    <td>@sale.Discount.ToString("C")</td>
+                                    <td>
+                                        <span class="badge @badgeClass">@statusText</span>
+                                    </td>
+                                </tr>
+
+                                index++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center text-muted">No sales found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+                </div>
+              </div>
+
+             
+         

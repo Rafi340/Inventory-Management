@@ -1,0 +1,97 @@
+﻿@model UserAddModel
+@{
+    ViewData["Title"] = "Add";
+}
+<form asp-antiforgery="true" asp-area="Admin" enctype="multipart/form-data" asp-controller="Users"
+      asp-action="Add" method="post">
+    <partial name="_ResponsePartial" />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="card">
+        <h5 class="card-header">Add User</h5>
+
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label asp-for="FirstName" class="form-label">First Name</label>
+                        <input type="text"
+                               class="form-control"
+                               asp-for="FirstName" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label asp-for="LastName" class="form-label">Last Name</label>
+                        <input type="text"
+                               class="form-control"
+                               asp-for="LastName" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email</label>
+                        <input type="text"
+                               class="form-control"
+                               asp-for="Email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                        
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">Password</label>
+                        <input type="password"
+                               class="form-control"
+                               asp-for="Password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                        
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password"
+                               class="form-control"
+                               asp-for="ConfirmPassword" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label asp-for="Role" class="form-label">Role</label>
+                        <select asp-for="Role" asp-items="Model.RoleList" class="form-select">
+                            <option value="">Choose...</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a Role.</div>
+                        <span asp-validation-for="Role" class="text-danger"></span>
+                    </div>
+                </div>
+                
+            </div>
+
+            
+
+
+
+        </div>
+
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+
+    </div>
+
+</form>
+
+@section Scripts
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}
+

@@ -1,0 +1,164 @@
+﻿
+@{
+    ViewData["Title"] = "Customers";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/assets/vendor/libs/typeahead-js/typeahead.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/flatpickr/flatpickr.css" />
+    <!-- Row Group CSS -->
+    <link rel="stylesheet" href="~/assets/vendor/libs/datatables-rowgroup-bs5/rowgroup.bootstrap5.css" />
+    <!-- Form Validation -->
+    <link rel="stylesheet" href="~/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
+}
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="card-title mb-2">Customers</h5>
+            </div>
+            <div class="col-md-6 text-end">
+                <button class="btn btn-primary"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#addEventSidebar"
+                        aria-controls="addEventSidebar">
+                    <i class="ti ti-plus me-1"></i>
+                    <span class="align-middle">Add Customer</span>
+                    </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-datatable table-responsive pt-0">
+        <partial name="_ResponsePartial" />
+        <partial name="_ModalPartial" />
+        <table id="Customers" class="datatables-basic table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Adress</th>
+                    <th>Openinig Balance</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+<partial name="_CustomerAddForm" />
+<div id="updateCustomerContainer"></div>
+
+
+
+@section Scripts
+{
+    @* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> *@
+    @* <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script> *@
+    <partial name="_ValidationScriptsPartial" />
+    <script src=@Url.Content("~/assets/js/forms-file-upload.js")></script>
+    <script src="~/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
+    <script src="~/assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js"></script>
+    <script src="~/assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js"></script>
+    <script src="~/assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js"></script>
+    <script>
+        $(function () {
+            $("#Customers").DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: false,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'All']
+                ],
+                ajax: {
+                    url: "/Admin/Customers/GetCustomers",
+                    type: "POST",
+                    contentType: "application/json", //must be added
+                    dataType: "json", //better to add, not mandatory
+                    data: function (d) {
+                        d.SearchItem = {};
+                        return JSON.stringify(d);
+                    },
+                },
+                columnDefs: [
+                    {
+                        orderable: false,
+                        targets: 6,
+                        render: function (data, type, row) {
+                            console.log(type);
+                            return `
+
+                                            <div class="dropdown">
+                                          <button
+                                           class="btn p-0"
+                                           type="button"
+                                          id="actionButtonId"
+                                         data-bs-toggle="dropdown"
+                                       aria-haspopup="true"
+                                         aria-expanded="false">
+                                         <i class="ti ti-dots-vertical ti-sm text-muted"></i>
+                                        </button>
+                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="actionButtonId">
+                                           <a class="dropdown-item editCustomer"
+                                            data-id='${data}'  value='${data}'> <i class="fa-solid fa-pencil me-2"></i> Edit </a>
+                                          <a class="dropdown-item show-bs-modal"  data-id='${data}' value='${data}'><i class="fas fa-trash me-2"></i>Delete</a>
+                                    </div>
+                                     </div>
+
+                                            `;
+                        }
+                    }
+                ]
+            });
+
+            $('#Customers').on('click', '.show-bs-modal', function (e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                let deletemodal = $('#modal-delete');
+                deletemodal.find('.modal-body p').text('Are you sure you want to delete this Customer?');
+                $('#delete-id').val(id);
+                $('#delete-form').attr('action', '/admin/Customers/delete');
+                deletemodal.modal('show');
+            });
+             $('#delete-button').click(function(){
+                $('#delete-form').submit();
+            });
+            $(document).on('click', '.editCustomer', function (e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+             fetchData('/admin/Customers/EditPartial', 'GET', { id: id }, function (html, status) {
+                $('#updateCustomerContainer').html(html);
+
+                    $.validator.unobtrusive.parse($('#updateCustomerContainer'));
+                    var offcanvasElement = document.getElementById('updateCustomer');
+                    var bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
+                    bsOffcanvas.show();
+              });
+
+            });
+        });
+
+            function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const img = document.getElementById('preview');
+                img.style.display = 'block';
+                img.src = URL.createObjectURL(file);
+            }
+            }
+          
+    </script>
+}
+

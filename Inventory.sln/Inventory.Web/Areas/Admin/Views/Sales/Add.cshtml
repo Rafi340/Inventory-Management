@@ -1,0 +1,412 @@
+﻿@model SalesAddModel
+@{
+    ViewData["Title"] = "Add";
+}
+@section Styles
+{
+    <link rel="stylesheet" href="@Url.Content("~/assets/vendor/libs/select2/select2.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/assets/vendor/libs/quill/typography.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/assets/vendor/libs/quill/katex.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/assets/vendor/libs/quill/editor.css")" />
+}
+
+<form asp-antiforgery="true" asp-area="Admin" enctype="multipart/form-data" asp-controller="Sales"
+          asp-action="Add" method="post" >
+    <div class="card">
+        <partial name="_Alert" />
+        <partial name="_ResponsePartial" />
+        <h5 class="card-header">New Sale</h5>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-2">
+                    <label asp-for="SaleDate" class="form-label">Sale Date</label>
+                    <input class="form-control" type="date" asp-for="SaleDate" name="SaleDate" id="SaleDate" />
+                    <span asp-validation-for="SaleDate" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="CustomerId" class="form-label">Select Customer</label>
+                    <select asp-for="CustomerId" asp-items="Model.CustomerList"
+                            class="form-control select2 form-select" aria-describedby="customerHelp" >
+                        <option value="">Select a Customer</option>
+                    </select>
+                    <span asp-validation-for="CustomerId" class="text-danger"></span>
+                    <div id="customerHelp" class="form-text">
+                       Please Select customer 
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="SalesTypeId" class="form-label">Select Sales Type</label>
+                    <select asp-for="SalesTypeId" asp-items="Model.SalesTypeList"
+                            class="form-control select2 form-select" aria-describedby="salesTypeHelp">
+                        <option value="">Select Sales Type</option>
+                    </select>
+                    <span asp-validation-for="SalesTypeId" class="text-danger"></span>
+                    <div id="salesTypeHelp" class="form-text">
+                        Please Select Sales Type
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label for="ProductId" class="form-label">Select Product</label>
+                    <select id="ProductId" name="ProductId" asp-items="Model.ProductList"
+                            class="form-control select2 form-select" aria-describedby="productHelp">
+                        <option value="">Select Product</option>
+                    </select>
+                    <div id="productHelp" class="form-text">
+                        Please Select Product for sale
+                    </div>
+                </div>
+                <div class="col-md-1 d-flex justify-content-center align-items-center">
+                    <button type="button" id="addproduct" class="btn btn-primary" >
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mt-2">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Product</th>
+                            <th>Stock</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Sub Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="saleTableBody"></tbody>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>VAT (%)</th>
+                            <th> <input type="number" asp-for="Vat" name="Vat" class="form-control" value="0" oninput="calculateTotals()" /></th>
+
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>Net Amount</th>
+                            <th> <input type="number" asp-for="NetAmount" name="NetAmount" class="form-control" disabled /></th>
+
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>Discount</th>
+                            <th> <input type="number" id="Discount" asp-for="Discount" class="form-control" min="0" value="0" oninput="calculateTotals()" /></th>
+
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>Total Amount <span class="text-danger">*</span></th>
+                            <th> <input type="number" asp-for="TotalAmount" name="TotalAmount" class="form-control" disabled /></th>
+
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>Paid Amount <span class="text-danger">*</span></th>
+                            <th> <input type="number" asp-for="PaidAmount" id="PaidAmount" class="form-control" value="0" oninput="calculateTotals()" /></th>
+
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>Due Amount </th>
+                            <th>  <input type="text" name="DueAmount" asp-for="DueAmount" class="form-control" disabled /></th>
+
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="row mt-3 mb-3">
+                <div class="col-md-4">
+                    <label asp-for="AcountTypeId" class="form-label">Account Type</label>
+                    <select asp-for="AcountTypeId" asp-items="Model.AcountTypeList"
+                            class="form-control select2 form-select" >
+                        <option value="">Account Type</option>
+                    </select>
+                    <span asp-validation-for="AcountTypeId" class="text-danger"></span>
+                    
+                </div>
+           
+                <div class="col-md-4">
+                    <label asp-for="AccountId" class="form-label">Account No</label>
+                    <select asp-for="AccountId" asp-items="Model.AccountList"
+                            class="form-control select2 form-select" >
+                        <option value="">Select Account</option>
+                    </select>
+                    <span asp-validation-for="AccountId" class="text-danger"></span>
+                    
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Note" class="form-label">Note</label>
+                    <input asp-for="Note" asp-for="Note" class="form-control"/>
+                        
+
+                </div>
+            </div>
+           
+            <div id="full-editor">
+            </div>
+            <input type="hidden" asp-for="TermsConditions" id="TermsConditions" />
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+    </div>
+</form>
+@section Scripts
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="@Url.Content("~/assets/vendor/libs/quill/katex.js")"></script>
+    <script src="@Url.Content("~/assets/vendor/libs/quill/quill.js")"></script>
+    <script src="@Url.Content("~/assets/vendor/libs/select2/select2.js")"></script>
+    
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+    $(document).ready(function () {
+            $('.select2').select2();
+           
+             const fullToolbar = [
+            [
+              {
+                font: []
+              },
+              {
+                size: []
+              }
+            ],
+            ['bold', 'italic', 'underline', 'strike'],
+            [
+              {
+                color: []
+              },
+              {
+                background: []
+              }
+            ],
+            [
+              {
+                script: 'super'
+              },
+              {
+                script: 'sub'
+              }
+            ],
+            [
+              {
+                header: '1'
+              },
+              {
+                header: '2'
+              },
+              'blockquote',
+              'code-block'
+            ],
+            [
+              {
+                list: 'ordered'
+              },
+              {
+                list: 'bullet'
+              },
+              {
+                indent: '-1'
+              },
+              {
+                indent: '+1'
+              }
+            ],
+            [{ direction: 'rtl' }],
+            ['link', 'image', 'video', 'formula'],
+            ['clean']
+            ];
+             var fullEditor = new Quill('#full-editor', {
+            bounds: '#full-editor',
+            placeholder: 'Type Something...',
+            modules: {
+                formula: true,
+                toolbar: fullToolbar
+            },
+            theme: 'snow'
+        });
+            const hiddenInput = document.getElementById('TermsConditions');
+            if (hiddenInput) {
+                const existing = @Html.Raw(Json.Serialize(@Model.TermsConditions ?? ""));
+                   fullEditor.root.innerHTML = existing;
+            }
+            $('form').on('submit', function () {
+                    $('#TermsConditions').val(fullEditor.root.innerHTML);
+            });
+     });
+    let saleItems = [];
+    let index = 0;
+   
+          
+        
+        $('#AcountTypeId').change(function () {
+            var typeId = $(this).val();
+            $('#AccountId').empty().append('<option>Loading...</option>');
+
+            if (typeId) {
+                    fetchData('/Admin/Sales/GetAccountsByType','GET', { accountTypeId: typeId }, function (data, status) {
+                    if(status)
+                    $('#AccountId').empty();
+                    console.log(data)
+                    $.each(data, function (i, account) {
+                                $('#AccountId').append(`<option value="${account.value}">${account.text}</option>`);
+                    });
+                });
+            } 
+        });
+    $('#addproduct').click(function() {
+        if($('#ProductId').val() == "") return false;
+        fetchData('/admin/Products/GetProductById', 'GET', { id: $('#ProductId').val() }, function (data, status) {
+            if(status)
+            {
+                let exist = saleItems.some(t=> t.id == data.id);
+                if(exist)
+                {
+                     $('.alert').removeClass('d-none').addClass('show').text('This product is already added!');
+                     setTimeout(() => {
+                       $('.alert').addClass('d-none').removeClass('show');
+                     }, 2000);
+                    return false;
+                }
+                       let obj = {
+                                productCode: data.productCode,
+                                name: data.name,
+                                stock: data.quantity,
+                                quantity: 1,
+                                unitPrice: data.unitPrice,
+                                id: data.id,
+
+                            }
+                        saleItems.push({...obj});
+
+                    generateTable(obj);
+                    calculateTotals();
+            }
+            
+        });
+    });
+
+        function updateRow(value)
+        {
+                let quantity = $(`#qty-${value}`).val();
+                let price = $(`#unitPrice-${value}`).val();
+                let subPrice = parseFloat(price) * parseFloat(quantity);
+                $(`#sub-${value}`).val(subPrice.toFixed(2));
+                
+                let findItemIdex = saleItems?.findIndex(t=> t.id == value);
+                
+                saleItems[findItemIdex].quantity = quantity;
+                saleItems[findItemIdex].unitPrice = price;
+
+                calculateTotals();
+
+        }
+        function calculateTotals()
+        {
+          
+           let vat = parseFloat($("#Vat").val() || 0);
+           let totalPrice = saleItems.reduce((sum,item) => sum +  (parseFloat(item.quantity) * parseFloat(item.unitPrice)) , 0);
+           let subTotal = totalPrice;
+
+           let discount = parseFloat($("#Discount").val() || 0);
+
+           let paidAmount = parseFloat($("#PaidAmount").val() || 0);
+
+           let parsentOfVat = (subTotal * vat) / 100;
+           let netAmount = totalPrice + parsentOfVat;
+
+           let totalAmmount = (totalPrice + parsentOfVat) - discount;
+           let dueAmmount = totalAmmount - paidAmount;
+
+           $("#NetAmount").val(netAmount.toFixed(2));
+           $('#TotalAmount').val(totalAmmount.toFixed(2));
+           $('#DueAmount').val(dueAmmount.toFixed(2));
+        }
+        function removeRow(value)
+        {
+                console.log(value)
+                document.getElementById(`row-${value}`)?.remove();
+                saleItems = saleItems.filter(item => item.id !== value);
+                redIndex();
+                calculateTotals();
+        }
+        function generateTable(obj)
+        {
+                 let row = `
+                        <tr id="row-${obj.id}">
+                            <td>${obj.productCode}
+                                 <input type="hidden" asp-for="SalesItems[${index}].ProductId" name="SalesItems[${index}].ProductId" value="${obj.id}" />
+                        </td>
+                        <td>${obj.name}</td>
+                        <td>${obj.stock}</td>
+                    <td>
+                       <input type="number" value='${(obj.quantity || 1)}' asp-for="SalesItems[${index}].Quantity" name="SalesItems[${index}].Quantity"  min="1" class="form-control"
+                               onchange="updateRow('${obj.id}')" id="qty-${obj.id}" />
+                    </td>
+                    <td>
+                       <input type="number" value="${obj.unitPrice}" asp-for="SalesItems[${index}].UnitPrice" name="SalesItems[${index}].UnitPrice"  class="form-control"
+                                                      onchange="updateRow('${obj.id}')" id="unitPrice-${obj.id}"/>
+                    </td>
+                    <td>
+                                        <input type="text" class="form-control" id="sub-${obj.id}" value="${obj.unitPrice * obj.quantity}" readonly />
+                    </td>
+                    <td>
+                                    <button type="button" class="btn btn-danger" onclick="removeRow('${obj.id}')">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`;
+
+                    document.getElementById("saleTableBody").insertAdjacentHTML("beforeend", row);
+                    index +=1;
+                    return row;
+        }
+        function redIndex()
+        {
+          $('#saleTableBody').empty();
+          index = 0;
+          saleItems.forEach(obj => {
+                  generateTable(obj)
+          });
+              calculateTotals();
+        }
+        
+
+      
+    </script>
+}
+
+

@@ -1,0 +1,209 @@
+﻿@model AddProductModel
+@{
+    ViewData["Title"] = "Add Product";
+}
+
+
+<form asp-antiforgery="true" asp-area="Admin" enctype="multipart/form-data" asp-controller="Products"
+          asp-action="Add" method="post" >
+    <partial name="_ResponsePartial" />
+    <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="card">
+                        <h5 class="card-header">Add Product</h5>
+  
+                        <div class="card-body">
+                             
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label asp-for="ProductCode" class="form-label">Product Code</label>
+                                        <input type="text"
+                                               class="form-control"
+                                                asp-for="ProductCode"
+                                                 aria-describedby="ProductCodeHelp" />
+                                        <span asp-validation-for="ProductCode" class="text-danger"></span>
+                                        <div id="ProductCodeHelp" class="form-text">
+                                            Provide a Product Code
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label asp-for="Name" class="form-label">Product Name</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               asp-for="Name"
+                                               aria-describedby="nameHelp" />
+                                        <span asp-validation-for="Name" class="text-danger"></span>
+                                        <div id="nameHelp" class="form-text">
+                                            Provide a Product Name
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label asp-for="Description" class="form-label">Product Description</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               asp-for="Description"
+                                               aria-describedby="descriptionHelp" />
+                                        <span asp-validation-for="Description" class="text-danger"></span>
+                                        <div id="descriptionHelp" class="form-text">
+                                            Provide a Description
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label asp-for="SKU" class="form-label">Barcode (SKU)</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               asp-for="SKU"
+                                               aria-describedby="skuHelpe" />
+                                        <span asp-validation-for="SKU" class="text-danger"></span>
+                                        <div id="skuHelpe" class="form-text">
+                                            Provide a Barcode
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label asp-for="Quantity" class="form-label">Quantity</label>
+                                        <input type="number"
+                                               class="form-control"
+                                               asp-for="Quantity"
+                                               aria-describedby="quantityHelpe" />
+                                        <span asp-validation-for="Quantity" class="text-danger"></span>
+                                        <div id="quantityHelpe" class="form-text">
+                                            Provide a Quantity
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="UnitId" class="form-label">Unit</label>
+                        <select asp-for="UnitId" asp-items="Model.UnitList" class="form-control form-select select2" id="UnitId">
+                                            <option value="">Choose...</option>
+                                        </select>
+                                        <div class="invalid-feedback">Please select a Unit.</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="CategoryId" class="form-label">Category</label>
+                        <select asp-for="CategoryId" asp-items="Model.CategoryList" class="form-control form-select select2" id="CategoryId">
+                                            <option value="">Choose...</option>
+                                        </select>
+                                        <div class="invalid-feedback">Please select a Category.</div>
+                                    </div>
+                                </div>
+                           
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label asp-for="UnitPrice" class="form-label">Purchase Price</label>
+                                        <input type="number"
+                                               class="form-control"
+                                               asp-for="UnitPrice"
+                                               aria-describedby="unitPriceHelper" />
+                                        <span asp-validation-for="UnitPrice" class="text-danger"></span>
+                                        <div id="unitPriceHelper" class="form-text">
+                                            Provide a Purchase Price
+                                        </div>
+                                    </div>
+                                </div>
+                                 <div class="col-md-4">
+                                     <div class="mb-3">
+                                         <label asp-for="UnitPrice" class="form-label">MRP Price</label>
+                                         <input type="number"
+                                                class="form-control"
+                                                asp-for="MrpPrice"
+                                                aria-describedby="MrpPriceHelper" />
+                                         <span asp-validation-for="MrpPrice" class="text-danger"></span>
+                                         <div id="MrpPriceHelper" class="form-text">
+                                             Provide a MRP Price
+                                         </div>
+                                     </div>
+                                 </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label asp-for="WholeSalePrice" class="form-label">WholeSale Price</label>
+                                            <input type="number"
+                                                   class="form-control"
+                                                   asp-for="WholeSalePrice"
+                                                   aria-describedby="wholeSalePriceeHelper" />
+                                            <span asp-validation-for="WholeSalePrice" class="text-danger"></span>
+                                            <div id="wholeSalePriceeHelper" class="form-text">
+                                                Provide a WholeSale Price
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+                            
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label asp-for="LowStock" class="form-label">Low Stock</label>
+                                        <input type="number"
+                                               class="form-control"
+                                               asp-for="LowStock"
+                                               aria-describedby="lowStockHelper" />
+                                        <span asp-validation-for="LowStock" class="text-danger"></span>
+                                        <div id="lowStockHelper" class="form-text">
+                                            Provide Low Stock
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label asp-for="ImageFile" class="form-label">Product Image</label>
+                                        <input type="file"
+                                               class="form-control"
+                                               asp-for="ImageFile"
+                                                onchange="previewImage(event)"
+                                                accept="image/*" />
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                <img style="display: none;" id="preview" class="img-fluid rounded mb-3 pt-1 mt-4"
+                                     height="100"
+                                     width="100"
+                                     alt="User avatar" />
+                                </div>
+                        </div>
+                            
+                             
+        
+                        </div>
+                        
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                  
+            </div>
+
+         </form>
+
+@section Scripts
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="@Url.Content("~/assets/vendor/libs/select2/select2.js")"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+         $(document).ready(function () {
+            $('.select2').select2();
+         })
+        function previewImage(event) {
+           const file = event.target.files[0];
+           if (file) {
+               const img = document.getElementById('preview');
+               img.style.display = 'block';
+               img.src = URL.createObjectURL(file);
+           }
+           }
+    </script>
+}
+

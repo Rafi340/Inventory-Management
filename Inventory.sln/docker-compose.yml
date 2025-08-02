@@ -1,0 +1,26 @@
+services:
+    web:
+        build: 
+            context: .
+            dockerfile: DevSkill.Inventory.Web/Dockerfile
+        image: devskill.inventory.web
+        env_file: 
+            - DevSkill.Inventory.Web/web.env
+        volumes:
+            - inventory-data:/app/Logs/
+        ports:
+            - "8000:80"
+        entrypoint: ["dotnet", "DevSkill.Inventory.Web.dll"]
+    worker:
+        build: 
+            context: .
+            dockerfile: DevSkill.Inventory.Worker/Dockerfile
+        image: devskill.inventory.worker
+        env_file: 
+            - DevSkill.Inventory.Worker/worker.env
+        volumes:
+            - inventory-data:/app/Logs/
+        entrypoint: ["dotnet", "DevSkill.Inventory.Worker.dll"]
+
+volumes:
+    inventory-data:
