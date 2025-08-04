@@ -15,7 +15,7 @@ An enterprise-grade **Inventory Management System** built using modern technolog
 ### 🔐 Security & Access
 - **Role-based User Management** - Create and manage user accounts with granular permissions
 - **Authentication** - Secure login system
-- 
+  
 ### Identity Framework Integration
 - **Extended User Management**: Custom `ApplicationUser` with additional profile properties
 - **Role Management**: Custom `ApplicationRole` with role descriptions
