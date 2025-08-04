@@ -47,3 +47,27 @@ Automated unit tests are written using:
 Run tests via:
 ```bash
 dotnet test
+🚀 Getting Started
+✅ Prerequisites
+- .NET 9 SDK
+- Docker 
+- SQL Server (local or container)
+AWS account with:
+ - S3 bucket
+ - SQS queue
+ - IAM credentials
+🐳 Docker Setup
+ - Clone the Repository
+    git clone [(https://github.com/Rafi340/Inventory-Management.git)]
+    cd Inventory-Management
+ - Configure Environment Variables
+Create a .env file in the root:
+ - AWS_ACCESS_KEY_ID=your_aws_access_key
+ - AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+ - AWS_REGION=ap-south-1
+ - S3_BUCKET_NAME=your-s3-bucket
+ - SQS_QUEUE_URL=your-sqs-queue-url
+Run Database Migration
+ - dotnet ef database update --project Inventory.Web --context ApplicationDbContext
+Start Docker Containers
+ - docker-compose up --build
