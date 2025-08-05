@@ -129,7 +129,7 @@ dotnet ef database update --project Inventory.Web --context ApplicationDbContext
 docker-compose up --build -d
 
 # Access the application
-# 🌐 Web Interface: http://localhost:8080
+# 🌐 Web Interface: http://localhost:8000
 ```
 
 ---
