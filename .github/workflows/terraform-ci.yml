@@ -7,26 +7,10 @@ on:
     branches:
       - main
 jobs:
-  terraform:
-    name: 'Terraform CI'
+  install-makefile:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.6
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Validate
-        run: terraform validate
-
-      - name: Terraform Plan
-        run: terraform plan -out=tfplan
-
-      - name: Terraform Show Plan
-        run: terraform show -no-color tfplan
+      - shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y make
